@@ -187,3 +187,25 @@ export default function RootLayout({ children }) {
   );
 }
 ```
+
+## 공유하는 컴포넌트들은 무엇인가?
+
+만약에 클라이언트 컴포넌트와 서버 컴포넌트 둘 다 작동하는 컴포넌트를 만들고 싶다면 어떻게 해야할까?
+DRY(Do not repeat yourself) 원리를 따르기 위해서 두 컴포넌트들 사이에서 로직이 공유되도록 해야한다.
+
+상호작용성 없이 공통 컴포넌트들의 로직을 추상화 할 수 있고, 그것들을 사용하고 싶은 곳 어디에서든지 선언할 수 있다.
+
+예를 들어서 "use client" 컴포넌트를 선언 했다면, 그것은 클라이언트 컴포넌트 일 것이다. 반면에 서버 컴포넌트를 사용할 것이면 따로 선언할 필요 없을 것이다.
+
+서버 컴포넌트로 사용할 것이라면, 컴포넌트 안에 이벤트 핸들러가 없는지 확인해야한다. 만약에 이벤트 핸들러가 서버 컴포넌트 안에 있다면 작동하지 않을 것이다.
+
+아래 예시로 Date 컴포넌트는 서버 컴포넌트와 클라이언트 컴포넌트 두 곳에서 다 사용할 수 있다.
+
+```jsx
+import { parseISO, format } from "date-fns";
+
+export default function Date({ dateString, formatType = "LLLL dd, yyyy" }) {
+  const date = parseISO(dateString);
+  return <time dateTime={dateString}>{format(date, formatType)}</time>;
+}
+```
